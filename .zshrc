@@ -29,14 +29,14 @@ fi
 
 export FZF_DEFAULT_COMMAND='ag -p ~/.gitignore -g ""'
 
-#export NVM_DIR="$HOME/.nvm"
-#. "/usr/local/opt/nvm/nvm.sh"
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
 # Aliases
 
 # Git Aliases
 alias gs='git status'
-alias gl='git l'
+git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 
 #autoload promptinit
 #fpath=($HOME/yadr.bak/zsh/prezto-themes $HOME/.zsh.prompts $fpath)
@@ -46,4 +46,4 @@ camelcase() {
     perl -pe 's#(_|^)(.)#\u$2#g'
 }
 
-source ~/.zsh.custom/monolith.plugin.zsh
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
