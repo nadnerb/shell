@@ -42,6 +42,9 @@ git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Crese
 #fpath=($HOME/yadr.bak/zsh/prezto-themes $HOME/.zsh.prompts $fpath)
 #promptinit
 
+bindkey -v
+bindkey '^R' history-incremental-search-backward
+
 camelcase() {
     perl -pe 's#(_|^)(.)#\u$2#g'
 }
