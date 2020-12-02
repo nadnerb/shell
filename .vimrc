@@ -26,6 +26,7 @@ syntax on
 " The mapleader has to be set before vundle starts loading all
 " the plugins.
 let mapleader=";"
+let g:VM_leader = ";"
 
 " ================ Turn Off Swap Files ==============
 
@@ -101,7 +102,9 @@ set ignorecase      " Ignore case when searching...
 set smartcase       " ...unless we type a capital
 
 " Copy relative path to clipboard
+" remap ;evs :source $MYVIMRC
 nnoremap <Leader>cp :let @+ = expand("%")\| echo "path copied"<CR>
+" nnoremap <Leader>cp :let @+=expand('%:p')<CR>
 nnoremap <silent> <Leader>cl :let @+ = expand("%") . ":" . line(".")\| echo "path and line copied"<CR>
 
 " jj for escape
@@ -126,8 +129,18 @@ Plug 'jistr/vim-nerdtree-tabs'
 Plug 'chrisbra/color_highlight'
 Plug 'skwp/vim-colors-solarized'
 
-Plug '/usr/local/opt/fzf'
-Plug 'junegunn/fzf.vim'
+" Plug 'Shougo/deoplete.nvim'
+" Plug 'roxma/nvim-yarp'
+" Plug 'roxma/vim-hug-neovim-rpc'
+
+" Use release branch (recommend)
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" Or build from source code by using yarn: https://yarnpkg.com
+Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lockfile'}
+
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf'
 
 Plug 'christoomey/vim-tmux-navigator'
 
@@ -138,23 +151,27 @@ Plug 'tpope/vim-abolish'
 Plug 'skwp/vim-html-escape'
 Plug 'elzr/vim-json'
 
-Plug 'elixir-editors/vim-elixir'
-
 Plug 'vim-syntastic/syntastic'
+
+Plug 'posva/vim-vue'
+Plug 'pangloss/vim-javascript'
+
+Plug 'dense-analysis/ale'
 
 Plug 'ecomba/vim-ruby-refactoring'
 Plug 'tpope/vim-rails'
 Plug 'tpope/vim-rake'
+Plug 'tpope/vim-endwise'
 Plug 'vim-ruby/vim-ruby'
 Plug 'keith/rspec.vim'
-Plug 'skwp/vim-iterm-rspec'
 Plug 'skwp/vim-spec-finder'
-Plug 'ck3g/vim-change-hash-syntax'
 Plug 'tpope/vim-bundler'
+Plug 'ck3g/vim-change-hash-syntax'
+
+Plug 'skwp/vim-iterm-rspec'
 Plug 'slim-template/vim-slim'
 Plug 'mxw/vim-jsx'
 Plug 'mattn/emmet-vim'
-Plug 'slim-template/vim-slim'
 
 Plug 'justinmk/vim-sneak'
 Plug 'rking/ag.vim'
@@ -167,7 +184,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
 Plug 'tomtom/tcomment_vim'
-Plug 'terryma/vim-multiple-cursors'
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 
 "Plug 'nelstrom/vim-textobj-rubyblock'
 
@@ -176,6 +193,7 @@ call plug#end()
 
 syntax enable
 set background=dark
+let g:solarized_termcolors=256
 colorscheme solarized
 
 " search
@@ -231,8 +249,8 @@ set guioptions-=T
 set guifont=Monaco:h14
 
 " quickly edit vimrc
-nnoremap <leader>ev :e $MYVIMRC<cr> nnoremap <leader>evs :source $MYVIMRC<cr>
-nnoremap <leader>evl :source $MYVIMRC<cr>
+" nnoremap <leader>ev :e $MYVIMRC<cr> nnoremap <leader>evs :source $MYVIMRC<cr>
+" nnoremap <leader>evl :source $MYVIMRC<cr>
 
 " find next underscore
 nnoremap + /\w\+_<CR>
@@ -260,19 +278,29 @@ if has("autocmd")
   " :autocmd BufRead   *.rb    1;/^def
 endif
 
-imap <S-CR>    <CR><CR>end<Esc>-cc
+"imap <S-CR>    <CR><CR>end<Esc>-cc
+"
+" \   'ruby': ['standardrb', 'rubocop'],
+let g:ale_linters = {
+      \   'ruby': ['standardrb'],
+      \   'python': ['flake8', 'pylint'],
+      \   'javascript': ['prettier'],
+      \}
+let g:ale_fix_on_save = 1
 
-"
-" if !exists( "*EndToken" )
-"   function EndToken()
-"     let current_line = getline( '.' )
-"     let braces_at_end = '{\s*\(|\(,\|\s\|\w\)*|\s*\)\?$'
-"     if match( current_line, braces_at_end ) >= 0
-"       return '}'
-"     else
-"       return 'end'
-"     endif
-"   endfunction
-" endif
-"
-" imap <S-CR> <ESC>:execute 'normal o' . EndToken()<CR>O
+" let g:deoplete#enable_at_startup = 1
+
+" autocompletion
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" gem install solargraph
+let g:coc_global_extensions = ['coc-solargraph']
