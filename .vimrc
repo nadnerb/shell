@@ -304,3 +304,4 @@ endfunction
 
 " gem install solargraph
 let g:coc_global_extensions = ['coc-solargraph']
+" :CocInstall coc-vetur coc-json coc-tsserver
