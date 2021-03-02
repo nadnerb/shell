@@ -107,6 +107,9 @@ nnoremap <Leader>cp :let @+ = expand("%")\| echo "path copied"<CR>
 " nnoremap <Leader>cp :let @+=expand('%:p')<CR>
 nnoremap <silent> <Leader>cl :let @+ = expand("%") . ":" . line(".")\| echo "path and line copied"<CR>
 
+" fix mouse selection
+se mouse+=a
+
 " jj for escape
 nnoremap j gj
 nnoremap k gk
@@ -149,14 +152,19 @@ Plug 'tpope/vim-git'
 Plug 'tpope/vim-abolish'
 
 Plug 'skwp/vim-html-escape'
-Plug 'elzr/vim-json'
+" Plug 'jiangmiao/auto-pairs'
 
 Plug 'vim-syntastic/syntastic'
+Plug 'dense-analysis/ale'
 
 Plug 'posva/vim-vue'
 Plug 'pangloss/vim-javascript'
 
-Plug 'dense-analysis/ale'
+Plug 'elzr/vim-json'
+
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+
+Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
 
 Plug 'ecomba/vim-ruby-refactoring'
 Plug 'tpope/vim-rails'
@@ -285,6 +293,7 @@ let g:ale_linters = {
       \   'ruby': ['standardrb'],
       \   'python': ['flake8', 'pylint'],
       \   'javascript': ['prettier'],
+      \   'golang': ['golint'],
       \}
 let g:ale_fix_on_save = 1
 
@@ -302,6 +311,7 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
+" :CocInstall coc-json coc-tsserver coc-go coc-python
 " gem install solargraph
 let g:coc_global_extensions = ['coc-solargraph']
 " :CocInstall coc-vetur coc-json coc-tsserver
