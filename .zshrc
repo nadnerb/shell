@@ -144,8 +144,6 @@ export NVM_DIR="$HOME/.nvm"
 # uninstall by removing these lines
 [[ -f ~/.config/tabtab/__tabtab.zsh ]] && . ~/.config/tabtab/__tabtab.zsh || true
 
-export FREEDESKTOP_MIME_TYPES_PATH=/opt/Cellar/shared-mime-info/2.1/share/shared-mime-info/packages/freedesktop.org.xml
-
 list-instances() {
   aws ec2 describe-instances --query "Reservations[*].Instances[*].{PublicIP:PublicIpAddress,Name:Tags[?Key=='Name']|[0].Value,Status:State.Name,InstanceId:InstanceId}" --filters Name=instance-state-name,Values=running --output table
 }
