@@ -5,7 +5,7 @@ export VISUAL=vim
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/home/brendan/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -71,7 +71,8 @@ ZSH_THEME="cloud"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git ruby autojump)
+# plugins=(git ruby autojump)
+plugins=(git ruby)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -94,6 +95,11 @@ set -o vi
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
+PATH=$PATH:/opt/bin
+
+# Autojump
+[ -f /opt/etc/profile.d/autojump.sh ] && . /opt/etc/profile.d/autojump.sh
+
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
@@ -114,8 +120,9 @@ eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
 # ruby
-source /usr/local/share/chruby/chruby.sh
-source /usr/local/share/chruby/auto.sh
+source /opt/opt/chruby/share/chruby/auto.sh
+source /opt/opt/chruby/share/chruby/chruby.sh
+
 
 #go
 export GOPATH="$HOME/go"
@@ -129,12 +136,18 @@ bindkey '^R' history-incremental-search-backward
 
 export NODE_OPTIONS="--max-old-space-size=6144"
 
-# Added by serverless binary installer
-# export PATH="$HOME/.serverless/bin:$PATH"
-
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+export NVM_DIR="$HOME/.nvm"
+  [ -s "/opt/opt/nvm/nvm.sh" ] && . "/opt/opt/nvm/nvm.sh"  # This loads nvm
+  [ -s "/opt/opt/nvm/etc/bash_completion.d/nvm" ] && . "/opt/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm completion
 
 # tabtab source for packages
 # uninstall by removing these lines
 [[ -f ~/.config/tabtab/__tabtab.zsh ]] && . ~/.config/tabtab/__tabtab.zsh || true
+
+export FREEDESKTOP_MIME_TYPES_PATH=/opt/Cellar/shared-mime-info/2.1/share/shared-mime-info/packages/freedesktop.org.xml
+
+list-instances() {
+  aws ec2 describe-instances --query "Reservations[*].Instances[*].{PublicIP:PublicIpAddress,Name:Tags[?Key=='Name']|[0].Value,Status:State.Name,InstanceId:InstanceId}" --filters Name=instance-state-name,Values=running --output table
+}
+
+chruby ruby-2.7.2
