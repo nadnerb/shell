@@ -4,7 +4,15 @@ set nocompatible
 
 " ================ General Config ====================
 
-set number                      "Line numbers are good
+" set number                      "Line numbers are good
+set number relativenumber
+
+augroup numbertoggle
+  autocmd!
+  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
+  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
+augroup END
+
 set backspace=indent,eol,start  "Allow backspace in insert mode
 set history=1000                "Store lots of :cmdline history
 set showcmd                     "Show incomplete cmds down the bottom
@@ -138,6 +146,8 @@ Plug 'skwp/vim-colors-solarized'
 
 " Use release branch (recommend)
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
 
 " Or build from source code by using yarn: https://yarnpkg.com
 Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lockfile'}
@@ -165,6 +175,8 @@ Plug 'elzr/vim-json'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
+
+Plug 'hashivim/vim-terraform'
 
 Plug 'ecomba/vim-ruby-refactoring'
 Plug 'tpope/vim-rails'
@@ -234,7 +246,10 @@ let g:nerdtree_tabs_focus_on_files = 1
 
 nmap <D-N> :NERDTreeToggle<CR>
 nnoremap <Leader>e :NERDTreeToggle<Enter>
-nnoremap <silent> <Leader>r :NERDTreeFind<CR>
+nnoremap <silent> <Leader>f :NERDTreeFind<CR>
+let NERDTreeIgnore=['\.pyc', '\~$']
+
+let g:NERDTreeWinSize=40
 
 " to to the beginnning of text, not a new line
 nnoremap 0 ^
@@ -315,3 +330,8 @@ endfunction
 " gem install solargraph
 let g:coc_global_extensions = ['coc-solargraph']
 " :CocInstall coc-vetur coc-json coc-tsserver
+
+let g:UltiSnipsExpandTrigger="<c-space>"
+" list all snippets for current filetype
+let g:UltiSnipsListSnippets="<c-l>"
+
