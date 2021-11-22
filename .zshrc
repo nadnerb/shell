@@ -1,5 +1,10 @@
-export EDITOR=vim
-export VISUAL=vim
+zmodload zsh/zprof
+
+# hack for early m1 homebrew issue
+export EDITOR==/opt/Cellar/vim/8.2.3450/bin/vim
+export VISUAL=/opt/Cellar/vim/8.2.3450/bin/vim
+
+setopt HIST_IGNORE_SPACE
 
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
@@ -95,8 +100,6 @@ set -o vi
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
-PATH=$PATH:/opt/bin
-
 # Autojump
 [ -f /opt/etc/profile.d/autojump.sh ] && . /opt/etc/profile.d/autojump.sh
 
@@ -111,25 +114,23 @@ alias gpt="./scripts/testfrontend && git push"
 alias rs="./bin/rspec --format documentation"
 alias yt="yarn test --single-run --reporters mocha"
 
-export FZF_DEFAULT_COMMAND='ag -p ~/.gitignore -g ""'
+# override osx vim
+# hack for early m1 homebrew issue
+alias vi=/opt/Cellar/vim/8.2.3450/bin/vim
+alias vim=/opt/Cellar/vim/8.2.3450/bin/vim
 
-#python
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+export FZF_DEFAULT_COMMAND='ag -p ~/.gitignore -g ""'
 
 # ruby
 source /opt/opt/chruby/share/chruby/auto.sh
 source /opt/opt/chruby/share/chruby/chruby.sh
-
 
 #go
 export GOPATH="$HOME/go"
 export PATH="$GOPATH/bin:$PATH"
 
 # general
-export PATH="/home/brendan/bin:$PATH"
+export PATH=$PATH:$HOME/bin:/opt/bin:/usr/local/bin
 
 bindkey -v
 bindkey '^R' history-incremental-search-backward
@@ -144,8 +145,45 @@ export NVM_DIR="$HOME/.nvm"
 # uninstall by removing these lines
 [[ -f ~/.config/tabtab/__tabtab.zsh ]] && . ~/.config/tabtab/__tabtab.zsh || true
 
+#export FREEDESKTOP_MIME_TYPES_PATH=/opt/Cellar/shared-mime-info/2.1/share/shared-mime-info/packages/freedesktop.org.xml
+
 list-instances() {
   aws ec2 describe-instances --query "Reservations[*].Instances[*].{PublicIP:PublicIpAddress,Name:Tags[?Key=='Name']|[0].Value,Status:State.Name,InstanceId:InstanceId}" --filters Name=instance-state-name,Values=running --output table
+}
+
+list-instances-csl() {
+  aws ec2 describe-instances --query "Reservations[*].Instances[*].{PublicIP:PublicIpAddress,Name:Tags[?Key=='Name']|[0].Value,Status:State.Name,InstanceId:InstanceId}" --filters Name=instance-state-name,Values=running --output table --profile csl
+}
+
+list-instances-dev() {
+  aws ec2 describe-instances --query "Reservations[*].Instances[*].{PublicIP:PublicIpAddress,Name:Tags[?Key=='Name']|[0].Value,Status:State.Name,InstanceId:InstanceId}" --filters Name=instance-state-name,Values=running --output table --profile development
+}
+
+list-instances-services() {
+  aws ec2 describe-instances --query "Reservations[*].Instances[*].{PublicIP:PublicIpAddress,Name:Tags[?Key=='Name']|[0].Value,Status:State.Name,InstanceId:InstanceId}" --filters Name=instance-state-name,Values=running --output table --profile services
+}
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/opt/Caskroom/miniforge/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/opt/Caskroom/miniforge/base/etc/profile.d/conda.sh" ]; then
+        . "/opt/Caskroom/miniforge/base/etc/profile.d/conda.sh"
+    else
+        export PATH="/opt/Caskroom/miniforge/base/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+# this slows new terms down
+# eval "$(mcfly init zsh)"
+
+timezsh() {
+  shell=${1-$SHELL}
+  for i in $(seq 1 10); do /usr/bin/time $shell -i -c exit; done
 }
 
 chruby ruby-2.7.2
