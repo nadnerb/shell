@@ -115,11 +115,17 @@ alias rs="./bin/rspec --format documentation"
 alias yt="yarn test --single-run --reporters mocha"
 
 # override osx vim
-# hack for early m1 homebrew issue
 alias vi=/opt/Cellar/vim/8.2.3450/bin/vim
 alias vim=/opt/Cellar/vim/8.2.3450/bin/vim
 
 export FZF_DEFAULT_COMMAND='ag -p ~/.gitignore -g ""'
+
+#python
+# export PYENV_ROOT="$HOME/.pyenv"
+# export PATH="$PYENV_ROOT/bin:$PATH"
+# eval "$(pyenv init --path)"
+# eval "$(pyenv init -)"
+# eval "$(pyenv virtualenv-init -)"
 
 # ruby
 source /opt/opt/chruby/share/chruby/auto.sh
@@ -162,6 +168,8 @@ list-instances-dev() {
 list-instances-services() {
   aws ec2 describe-instances --query "Reservations[*].Instances[*].{PublicIP:PublicIpAddress,Name:Tags[?Key=='Name']|[0].Value,Status:State.Name,InstanceId:InstanceId}" --filters Name=instance-state-name,Values=running --output table --profile services
 }
+
+chruby ruby-2.7.2
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
