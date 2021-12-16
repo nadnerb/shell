@@ -35,6 +35,8 @@ syntax on
 " the plugins.
 let mapleader=";"
 let g:VM_leader = ";"
+" let mapleader=" "
+" let g:VM_leader = " "
 
 " ================ Turn Off Swap Files ==============
 
